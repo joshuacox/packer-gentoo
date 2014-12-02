@@ -1,0 +1,141 @@
+{
+  "variables": {
+      "iso_url": "http://distfiles.gentoo.org/releases/amd64/autobuilds/20141127/install-amd64-minimal-20141127.iso",
+      "iso_checksum": "3f8de5fd27792a070c9bd9f7ac5b7e888266372a275f1f1741fb81e696cbf671b259fd0eff253c29361b63ab3b77fd1669b07dc339018ec7fbeb6574173ed974",
+      "iso_checksum_type": "sha512"
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/settings.sh",
+        "scripts/base.sh",
+        "scripts/kernel.sh",
+        "scripts/usb.sh",
+        "scripts/git.sh",
+        "scripts/subversion.sh",
+        "scripts/virtualbox.sh",
+        "scripts/vagrant.sh",
+        "scripts/ruby.sh",
+        "scripts/add_chef.sh",
+        "scripts/add_puppet.sh",
+        "scripts/add_vim.sh",
+        "scripts/cron.sh",
+        "scripts/syslog.sh",
+        "scripts/nfs.sh",
+        "scripts/grub.sh",
+        "scripts/wipe_sources.sh",
+        "scripts/cleanup.sh",
+        "scripts/zerodisk.sh",
+        "scripts/reboot.sh"
+      ],
+      "override": {
+        "virtualbox": {
+          "execute_command": "cat '{{.Path}}'|su -"
+        },
+        "vmware": {
+          "execute_command": "cat '{{.Path}}'|su -"
+        }
+      }
+    }
+  ],
+  "builders": [
+    {
+      "type": "qemu",
+      "boot_command": [
+        "<wait><wait><wait>",
+        "gentoo-nofb<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "passwd<enter><wait><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "/etc/init.d/sshd start<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20280,
+      "accelerator": "kvm",
+      "headless": "true",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'shutdown -hP now' > shutdown.sh; cat 'shutdown.sh'|su -"
+    },
+    {
+      "type": "virtualbox-iso",
+      "boot_command": [
+        "<wait><wait><wait>",
+        "gentoo-nofb<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "passwd<enter><wait><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "/etc/init.d/sshd start<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20280,
+      "guest_os_type": "Gentoo_64",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'shutdown -hP now' > shutdown.sh; cat 'shutdown.sh'|su -",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          2
+        ]
+      ]
+    },
+    {
+      "type": "vmware",
+      "boot_command": [
+        "<wait><wait><wait>",
+        "gentoo-nofb<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "<enter><wait>",
+        "<wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait><wait>",
+        "passwd<enter><wait><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "vagrant<enter><wait><wait>",
+        "/etc/init.d/sshd start<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 20280,
+      "guest_os_type": "other26xlinux-64",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "echo 'shutdown -hP now' > shutdown.sh; cat 'shutdown.sh'|su -",
+      "vmx_data": {
+        "memsize": "1024",
+        "numvcpus": 2,
+        "cpuid.coresPerSocket": "1"
+      }
+    }
+  ]
+}
