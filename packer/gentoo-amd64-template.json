@@ -7,6 +7,27 @@
   "provisioners": [
     {
       "type": "shell",
+          "environment_vars": [
+          "SYSTEMDRIVE=/dev/vda"
+          ],
+      "override": {
+        "qemu": {
+          "environment_vars": [
+          "SYSTEMDRIVE=/dev/vda"
+          ]
+        },
+        "virtualbox-iso": {
+          "environment_vars": [
+          "SYSTEMDRIVE=/dev/sda"
+          ]
+        },
+        "vmware": {
+          "environment_vars": [
+          "SYSTEMDRIVE=/dev/sda"
+          ],
+          "execute_command": "cat '{{.Path}}'|su -"
+        }
+      },
       "scripts": [
         "scripts/settings.sh",
         "scripts/base.sh",
@@ -28,15 +49,7 @@
         "scripts/cleanup.sh",
         "scripts/zerodisk.sh",
         "scripts/reboot.sh"
-      ],
-      "override": {
-        "virtualbox": {
-          "execute_command": "cat '{{.Path}}'|su -"
-        },
-        "vmware": {
-          "execute_command": "cat '{{.Path}}'|su -"
-        }
-      }
+      ]
     }
   ],
   "builders": [
@@ -56,7 +69,7 @@
       "boot_wait": "10s",
       "disk_size": 20280,
       "accelerator": "kvm",
-      "headless": "true",
+      "headless": "false",
       "iso_url": "{{user `iso_url`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",

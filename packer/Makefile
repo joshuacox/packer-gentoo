@@ -9,7 +9,7 @@ help:
 	@echo "   1. make build       - build the postgresql image"
 	@echo "   2. make clean  - cleanup"
 
-build: build-qemu beep
+build: build-vbox beep
 
 #clean: cleanvendor cleanbuilds
 clean: cleanbuilds

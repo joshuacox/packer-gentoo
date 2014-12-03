@@ -1,4 +1,5 @@
 # settings that will be shared between all scripts
+printenv
 
 cat <<DATAEOF > "/etc/profile.d/veewee.sh"
 # stage 3 filename and full url
