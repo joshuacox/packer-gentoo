@@ -9,7 +9,7 @@ dd if=/dev/zero of="$chroot/EMPTY" bs=1M
 rm "$chroot/EMPTY"
 
 # fill all swap space with zeros and recreate swap
-swapoff $SYSTEMDRIVE3
-shred -n 0 -z $SYSTEMDRIVE3
-mkswap $SYSTEMDRIVE3
+swapoff "$SYSTEMDRIVE""3"
+shred -n 0 -z "$SYSTEMDRIVE""3"
+mkswap "$SYSTEMDRIVE""3"
 exit

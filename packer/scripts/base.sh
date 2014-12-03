@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 source /etc/profile
 
 # partition the disk (http://www.rodsbooks.com/gdisk/sgdisk.html)
@@ -11,13 +11,14 @@ sgdisk -n 1:0:+128M -t 1:8300 -c 1:"linux-boot" \
 sleep 1
 
 # format partitions, mount swap
-mkswap $SYSTEMDRIVE3
-swapon $SYSTEMDRIVE3
-mkfs.ext2 $SYSTEMDRIVE1
-mkfs.ext4 $SYSTEMDRIVE4
+printenv
+mkswap "$SYSTEMDRIVE""3"
+swapon "$SYSTEMDRIVE""3"
+mkfs.ext2 "$SYSTEMDRIVE""1"
+mkfs.ext4 "$SYSTEMDRIVE""4"
 
 # mount other partitions
-mount $SYSTEMDRIVE4 "$chroot" && cd "$chroot" && mkdir boot && mount /dev/sda1 boot
+mount "$SYSTEMDRIVE""4" "$chroot" && cd "$chroot" && mkdir boot && mount /dev/sda1 boot
 
 # download stage 3, unpack it, delete the stage3 archive file
 wget -nv --tries=5 "$stage3url"
@@ -62,9 +63,9 @@ DATAEOF
 # set fstab
 cat <<DATAEOF > "$chroot/etc/fstab"
 # <fs>                  <mountpoint>    <type>          <opts>                   <dump/pass>
-$SYSTEMDRIVE1               /boot           ext2            noauto,noatime           1 2
-$SYSTEMDRIVE3               none            swap            sw                       0 0
-$SYSTEMDRIVE4               /               ext4            noatime                  0 1
+"$SYSTEMDRIVE""1"               /boot           ext2            noauto,noatime           1 2
+"$SYSTEMDRIVE""3"               none            swap            sw                       0 0
+"$SYSTEMDRIVE""4"               /               ext4            noatime                  0 1
 none                    /dev/shm        tmpfs           nodev,nosuid,noexec      0 0
 DATAEOF
 
